@@ -1,0 +1,40 @@
+from sqlalchemy import create_engine,text
+import os
+import time
+from dotenv import load_dotenv
+load_dotenv(dotenv_path='../.env')
+def connect_with_retry(retries=5,delay=2):
+    url = (
+        f"postgresql+psycopg2://"
+        f"postgres:{os.getenv('POSTGRES_PASSWORD', 'password')}"
+        f"@{os.getenv('DB_HOST', 'db')}"
+        f"/{os.getenv('POSTGRES_DB', 'testdb')}"
+    )
+    for i in range(retries):
+        try:
+            engine=create_engine(url)
+            with engine.connect() as conn:
+                conn.execute(text('SELECT 1'))
+            print('Connect successfully')
+            return engine
+        except Exception as e:
+            print(f'Error: {e}, try to connect after {delay} seconds')
+            time.sleep(delay)
+    raise Exception("Cannot connect after many tries")
+
+
+engine=connect_with_retry(10,2)
+with engine.begin() as conn:
+    conn.execute(text("""
+        CREATE TABLE IF NOT EXISTS test (
+            id SERIAL PRIMARY KEY,
+            name TEXT
+        )
+    """))
+    conn.execute(text("INSERT INTO test (name) VALUES (:name)"), {"name": "Khang"})
+    
+with engine.connect() as conn: 
+    result = conn.execute(text("SELECT * FROM test"))
+    rows = result.fetchall()
+    print("Data:", rows)
+
