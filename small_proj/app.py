@@ -1,3 +1,4 @@
+from pipeline import run
 from sqlalchemy import create_engine,text
 from dotenv import load_dotenv
 import os
@@ -23,16 +24,4 @@ def connect_retry(retries=5,delay=2):
     raise Exception("Cannot connect to database")
 
 engine = connect_retry(10,2)
-with engine.begin() as conn:
-    conn.execute(text("""
-        CREATE TABLE IF NOT EXISTS test (
-            id SERIAL PRIMARY KEY,
-            name TEXT
-        )
-    """))
-    conn.execute(text("INSERT INTO test (name) VALUES (:name)"), {"name": "Khang"})
-
-with engine.connect() as conn:
-    result = conn.execute(text("SELECT * FROM test"))
-    rows = result.fetchall()
-    print("Data:", rows)
+run(engine)
