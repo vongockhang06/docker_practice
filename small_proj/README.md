@@ -1,0 +1,1 @@
+Small project with docker: call CoinGecko API to know price of crypto
