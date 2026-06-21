@@ -26,3 +26,5 @@ CoinGecko API → Extract → Transform → Load → PostgreSQL (Docker)
 - Docker Compose multi-service setup
 - Retry logic for database connection
 - Environment variable management with .env
+- Centralized logging (file + console) across modules
+- Error handling for API and data transformation failures
