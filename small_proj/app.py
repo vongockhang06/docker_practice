@@ -1,9 +1,12 @@
+from logger_config import setup_pipeline_logging
+setup_pipeline_logging()
+
 from pipeline import run
-from sqlalchemy import create_engine,text
-from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
 import os
 import time
-load_dotenv(dotenv_path='../.env')
+import logging
+logger = logging.getLogger(__name__)
 def connect_retry(retries=5,delay=2):
     url=(
         f"postgresql+psycopg2://"
@@ -16,11 +19,12 @@ def connect_retry(retries=5,delay=2):
             engine=create_engine(url=url)
             with engine.connect() as conn:
                 conn.execute(text('SELECT 1'))
-            print('Connect successfully')
+            logger.info('Connected to database successfully')
             return engine
         except Exception as e:
-            print(f'Error: {e}, try to connect after {delay} seconds')
+            logger.warning(f'Connection attempt {i+1} failed: {e}, retrying in {delay}s')
             time.sleep(delay)
+    logger.error("Cannot connect to database after all retries")
     raise Exception("Cannot connect to database")
 
 engine = connect_retry(10,2)

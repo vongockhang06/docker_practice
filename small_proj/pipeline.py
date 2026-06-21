@@ -1,18 +1,18 @@
 from extract import extract
 from transform import transform
 from load import create_table, load
+import logging
+logger = logging.getLogger(__name__)
+
 def run(engine):
-    print("Extract...")
+    logger.info("Starting extract step...")
     raw = extract()
 
-    print("Transform...")
+    logger.info("Starting transform step...")
     rows = transform(raw)
 
-    print("Load...")
+    logger.info("Starting load step...")
     create_table(engine)
     load(engine, rows)
-
-    print("Pipeline done!")
-
-if __name__ == "__main__":
-    run()
+    
+    logger.info("Pipeline finished successfully")

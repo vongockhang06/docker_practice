@@ -1,6 +1,8 @@
 import requests
 from dotenv import load_dotenv
 import os
+import logging
+logger=logging.getLogger(__name__)
 load_dotenv()
 API_KEY = os.getenv('COINGECKO_API_KEY')
 def extract():
@@ -13,9 +15,14 @@ def extract():
     headers={
         'x-cg-demo-api-key': API_KEY
     }
-    response = requests.get(url=base_url,params=params,headers=headers)
-    response.raise_for_status()
-    return response.json()
+    try:
+        response = requests.get(url=base_url, params=params, headers=headers)
+        response.raise_for_status()
+        logger.info(f"Extracted data for {len(response.json())} coins")
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to extract data: {e}")
+        raise
 
 #response = extract() #checking
 #print(response) #checking

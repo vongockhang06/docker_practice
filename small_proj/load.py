@@ -1,6 +1,8 @@
 from sqlalchemy import text, create_engine
 from dotenv import load_dotenv
 import os
+import logging
+logger=logging.getLogger(__name__)
 def create_table(engine):
     with engine.begin() as conn:
         conn.execute(text("""
@@ -20,4 +22,4 @@ def load(engine, records:list):
                 INSERT INTO crypto_prices (coin, price_usd, usd_24h_change, collected_at)
                 VALUES (:coin, :price_usd, :usd_24h_change, :collected_at)
             """),row)
-    print('Load successfully')
+    logger.info(f"Loaded {len(records)} rows successfully")
