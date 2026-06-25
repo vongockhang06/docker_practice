@@ -1,3 +1,14 @@
 .env
 .small_proj
 *.log
+# Ignore Python bytecode
+__pycache__/
+*.pyc
+
+# Ignore Airflow runtime logs
+logs/
+
+# Ignore Airflow local configurations
+config/
+airflow.cfg
+airflow.db
