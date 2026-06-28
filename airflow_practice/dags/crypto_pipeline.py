@@ -27,7 +27,7 @@ def load_task(**context):
     import os
     rows = context['ti'].xcom_pull(task_ids='transform')
     engine = create_engine(
-        f"postgresql+psycopg2://postgres:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('POSTGRES_DB')}"
+        f"postgresql+psycopg2://airflow:airflow@postgres/airflow"
     )
     create_table(engine)
     load(engine, rows)
