@@ -25,9 +25,16 @@ def load_task(**context):
     from load import create_table, load
     from sqlalchemy import create_engine
     import os
+
     rows = context['ti'].xcom_pull(task_ids='transform')
+    
     engine = create_engine(
-        f"postgresql+psycopg2://airflow:airflow@postgres/airflow"
+        f"postgresql+psycopg2://"
+        f"{os.getenv('CRYPTO_DB_USER', 'postgres')}:"
+        f"{os.getenv('CRYPTO_DB_PASSWORD')}"
+        f"@{os.getenv('CRYPTO_DB_HOST', 'crypto-db')}:"
+        f"{os.getenv('CRYPTO_DB_PORT', '5432')}"
+        f"/{os.getenv('CRYPTO_DB_NAME', 'crypto')}"
     )
     create_table(engine)
     load(engine, rows)
