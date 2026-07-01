@@ -136,10 +136,10 @@ Copy `.env.example` to `.env` and fill in:
 
 ## Screenshots
 
-### Airflow DAG — All tasks green
+### Meta database 
 ![DAG running successfully](image.png)
 
-### PostgreSQL — Data accumulating hourly
+### Crypto database
 ![Data in crypto-db](image-1.png)
 
 ### Metabase Dashboard — Price trends over time
